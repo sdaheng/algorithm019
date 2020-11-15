@@ -199,6 +199,26 @@ class Practice:
             head = tail.next
         
         return hair.next
+    
+    def largestRectangleArea(self, heights):
+        n = len(heights)
+        left = [0] * n
+        right = [0] * n
+
+        stack = []
+
+        for i in range(n):
+            while stack and heights[stack[-1]] >= heights[i]:
+                right[stack[-1]] = i
+                stack.pop()
+            
+            left[i] = stack[-1] if stack else -1
+            stack.append(i)
+
+        ans = max((right[i] - left[i] - 1) * heights[i] for i in range(n)) if n > 0 else 0
+
+        return ans
+        
 
 
 class Test(unittest.TestCase):
