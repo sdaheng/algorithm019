@@ -76,6 +76,8 @@ class Solution:
 
                 chars[i] = tmp
 
+        nodeNums = 0
+        
         # 对词典中的词进行建图
         for word in wordList:
             addEdge(word)
