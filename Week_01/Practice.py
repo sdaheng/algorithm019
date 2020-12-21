@@ -34,6 +34,25 @@ def linkedList2List(head):
 
 
 class Practice:
+    def hasCycle(self, head):
+        """
+        docstring
+        """
+        if not head or not head.next:
+            return False
+        
+        slow = head
+        fast = head.next
+
+        while slow != fast:
+            if not fast or not fast.next:
+                return False
+
+            slow = slow.next
+            fast = fast.next.next
+
+        return True
+
     def maxArea(self, height):
         if not height:
             return 0
@@ -158,6 +177,12 @@ class Practice:
 
         return newHead.next
 
+    # 递归
+    # 终止条件，链表中没有节点或链表中只有一个节点
+    # 用head表示原始链表头节点，新链表的第二个节点。用newHead表示交换后的新链表头节点，即原始链表的第二个节点
+    # 用newHead.next表示剩余链表的头节点
+    # head.next = self.swapPairs(newHead.next) 表示交换剩余节点，交换后的新头节点为head的下一个节点
+    # 令newHead.next = head 完成交换
     def swapPairs(self, head):
         if not head or not head.next:
             return head
@@ -266,5 +291,9 @@ class Test(unittest.TestCase):
 
     def testTrap(self):
         self.assertEqual(HomeworkWeek1().trap([0,1,0,2,1,0,1,3,2,1,2,1]), 6)
+
+    def testHasCycle(self):
+        self.assertEqual(Practice().hasCycle(createLinkedList([3, 2, 0, -4])), True)
+        
 if __name__ == "__main__":
     unittest.main()

@@ -138,5 +138,69 @@ class Test(unittest.TestCase):
     def testCombine(self):
         self.assertEqual(Solution().combine(4, 2), [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]])
 
+import math
+class Heap:
+    def __init__(self, values):
+        self.branchCount = 2
+        self.length = 0
+        self.underlyingArray = []
+        
+        for value in values:
+            self.insert(value)
+
+    def insert(self, value):
+        """
+        docstring
+        """
+        self.underlyingArray.append(value)
+        self.length += 1
+        self._heapifyUp(self.length - 1)
+
+    def remove(self, i):
+        """
+        
+        """
+        
+        self.underlyingArray[i] = self.underlyingArray[self.length - 1] 
+        self.length -= 1
+        self.underlyingArray = self.underlyingArray[:self.length]
+
+        self._heapifyDown(i)
+
+    def top(self, k):
+        pass
+
+    def _parent(self, i):
+        return (i - 1) // self.branchCount
+
+    def _kthChild(self, i, k):
+        return i * self.branchCount + k
+
+    def _maxChild(self, i):
+        left = self._kthChild(i, 1)
+        right = self._kthChild(i ,2)
+        return left if self.underlyingArray[left] > self.underlyingArray[right] else right
+
+    def _heapifyUp(self, i):
+        value = self.underlyingArray[i]
+        # 如果待插入节点值比其父节点值大，则将当前位置的值设置成父节点的值
+        while i > 0 and value > self.underlyingArray(self._parent(i)):
+            self.underlyingArray[i] = self.underlyingArray[self._parent(i)];
+            # i改为父节点索引
+            i = self._parent(i)
+        # 调整完后的索引i设置成插入的节点值
+        self.underlyingArray[i] = value
+
+    def _heapifyDown(self, i):
+        tmp = self.underlyingArray[i]
+        while self._kthChild(i, 1) < self.length:
+            maxChild = self._maxChild(i)
+            if tmp > self.underlyingArray[maxChild]:
+                break
+            self.underlyingArray[i] = self.underlyingArray[maxChild]
+            i = maxChild
+        self.underlyingArray[i] = tmp
+
+        
 if __name__ == "__main__":
     unittest.main()
