@@ -1,5 +1,6 @@
 from typing import List
 import unittest
+import collections
 
 class Trie:
     """
@@ -149,6 +150,87 @@ class Solution:
             return
         
         solve(board)
+
+    def minMutation(self, start: str, end: str, bank: List[str]) -> int:
+        def numberingGene(gene):
+            if gene not in geneID:
+                nonlocal nodeNums
+                geneID[gene] = nodeNums
+                nodeNums += 1
+
+        def addEdge(gene):
+            numberingGene(gene)
+            srcNode = geneID[gene]
+
+            geneList = list(gene)
+
+            for i in range(len(geneList)):
+                tmp = geneList[i]
+
+                geneList[i] = "*"
+
+                newGene = "".join(geneList)
+                numberingGene(newGene)
+
+                destNode = geneID[newGene]
+
+                edge[srcNode].append(destNode)
+                edge[destNode].append(srcNode)
+
+                geneList[i] = tmp
+
+        geneID = {}
+        nodeNums = 0
+        edge = collections.defaultdict(list) 
+
+        for gene in bank:
+            addEdge(gene)
+
+        addEdge(start)
+
+        if end not in bank:
+            return -1
+
+        # addEdge(end)
+
+        dists = [float('inf')] * nodeNums
+        startID, endID = geneID[start], geneID[end]
+        dists[startID] = 0
+        queue = collections.deque([startID])
+
+        while queue:
+            x = queue.popleft()
+            if x == endID:
+                return dists[endID] // 2 
+
+            for it in edge[x]:
+                if dists[it] == float('inf'):
+                    dists[it] = dists[x] + 1
+                    queue.append(it)
+
+        return -1
+
+    def numIslands(self, grid: List[List[str]]) -> int:
+        m = len(grid)
+        n = 0
+        if m > 0:
+            n = len(grid[0])
+
+        def dfs(grid, r, c):
+            grid[r][c] = 0
+
+            for x, y in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]:
+                if 0 <= x < m and 0 <= y < n and grid[x][y] == '1':
+                    dfs(grid, x, y)
+
+        ret = 0
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == '1':
+                    ret += 1
+                    dfs(grid, i, j);
+
+        return ret
 
 class TestSolution(unittest.TestCase):
     def testSolveSudoku(self):
