@@ -112,12 +112,46 @@ class TestDisjointSet(unittest.TestCase):
         self.assertTrue(disjointSet.connected(2, 3))
 
 class Solution:
+    def findCircleNum(self, M: List[List[int]]) -> int:
+
+        def find(x):
+            parent = x
+            while disjointSet[parent] != parent:
+                parent = disjointSet[parent]
+
+            while disjointSet[x] != x:
+                tmp = disjointSet[x]
+                disjointSet[x] = parent
+                x = tmp
+
+            return x
+
+        def merge(x1, x2):
+            parentX1 = find(x1)
+            parentX2 = find(x2)
+
+            if parentX1 == parentX2:
+                return False
+
+            disjointSet[parentX1] = parentX2
+
+            return True
+
+        disjointSet = [ i for i in range(len(M)) ]
+        ans = len(M)
+        for i in range(len(M)):
+            for j in range(len(M[0])):
+                if M[i][j] and merge(i, j):
+                    ans -= 1
+
+        return ans
+        
     def solveSudoku(self, board: List[List[str]]) -> None:
         """
         Do not return anything, modify board in-place instead.
         """
 
-        def solve(board):
+        def solve():
             for i in range(len(board)):
                 for j in range(len(board[0])):
                     if board[i][j] == '.':
@@ -126,7 +160,7 @@ class Solution:
                             if isValid(i, j, ch):
                                 board[i][j] = ch
 
-                                if solve(board):
+                                if solve():
                                     return True
                                 else:
                                     board[i][j] = '.'
@@ -149,7 +183,8 @@ class Solution:
         if not board or not board[0]:
             return
         
-        solve(board)
+        solve()
+        print(board)
 
     def minMutation(self, start: str, end: str, bank: List[str]) -> int:
         def numberingGene(gene):
